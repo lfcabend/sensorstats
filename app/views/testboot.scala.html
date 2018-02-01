@@ -1,0 +1,92 @@
+@(searchForm: Form[SearchForm.SearchData], items2Select: Seq[(String, String)],
+    postUrl: Call, items:List[SearchForm.Item])(implicit request: RequestHeader, messages: Messages)
+@import helper._
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Test bootstrap</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/jquery-ui.min.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <script src="@routes.Assets.versioned("javascripts/jquery-3.2.1.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/jquery-ui.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/main.js")"></script>
+</head>
+<body>
+@if(searchForm.hasGlobalErrors) {
+  @searchForm.globalErrors.map { error: FormError =>
+    <div>
+      @error.key: @error.message
+    </div>
+  }
+}
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills float-right">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </nav>
+        <h3 class="text-muted">Sensor Stats Viewer</h3>
+    </div>
+    <div class="jumbotron">
+        <h1 class="display-3">Search</h1>
+
+        @helper.form(action = postUrl) {
+            <!--<div class="form-group">-->
+                <!--<label for="selectItem">Item</label>-->
+                <!--<select name="item" class="form-control" id="selectItem">-->
+                    <!--<option value="FrontDoor">Front Door</option>-->
+                    <!--<option value="Temp">Temp</option>-->
+                    <!--<option value="Hum">Hum</option>-->
+                <!--</select>-->
+            <!--</div>-->
+            <div class="form-group">
+            @select(
+                field = searchForm("itemName"),
+                options = items2Select,
+                '_default -> "Choose One"
+              )
+            </div>
+            <div class="form-group">
+                @helper.inputText(searchForm("from"), 'id -> "from")
+            </div>
+            <div class="form-group">
+                @helper.inputText(searchForm("to"), 'id -> "to")
+            </div>
+            <button type="today" id="today" class="btn btn-primary">Today</button>
+            <button type="week" id="week" class="btn btn-primary">Week</button>
+            <button type="month" id="month" class="btn btn-primary">Month</button>
+            <button type="submit" class="btn btn-primary">Search</button>
+        }
+    </div>
+    <table class="table table-striped">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th>value</th>
+        <th>timestamp</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for(w <- items) {
+        <th scope="row">1</th>
+        <td>@w.item</td>
+        <td>@w.value</td>
+        <td>@w.timestamp</td>
+    </tr>
+    }
+    </tbody>
+</table>
+</div>
+</body>
+</html>
